@@ -12,7 +12,7 @@ A simple web-based application to test and debug regular expressions (regex) in 
 
 ## Demo
 
-You can try the Regex Tester [here](https://github.com/tholumuzikhuboni/regex-tester).
+You can try the Regex Tester [here](https://regex-tester.tholumuzi.co.za).
 
 ## Installation
 
