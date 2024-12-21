@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regex Tester</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #282828;
+      color: white;
+      font-family: Consolas, monospace;
+    }
+    
+    /* Preloader Styles */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #1e1e1e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 30px;
+      background-color: #ffcc00;
+      border-radius: 10px;
+    }
+
+    .loading-text {
+      margin-top: 10px;
+      color: #ffcc00;
+      font-size: 1.2rem;
+    }
+
+    .container {
+      padding-top: 30px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      color: #ffcc00;
+      font-weight: bold;
+    }
+
+    .header p {
+      color: #aaaaaa;
+    }
+
+    .terminal {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .form-label {
+      color: #66ff66;
+    }
+
+    select, input, textarea, button {
+      background-color: #333333;
+      color: #66ff66;
+      border: 1px solid #666666;
+      border-radius: 5px;
+      font-family: Consolas, monospace;
+      font-size: 16px;
+    }
+
+    select:focus, input:focus, button:focus, textarea:focus {
+      outline: none;
+      border-color: #ffcc00;
+      box-shadow: 0 0 8px #ffcc00;
+    }
+
+    .btn-test {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #444444;
+      color: #ffcc00;
+      border: 1px solid #666666;
+    }
+
+    .btn-test:hover {
+      background-color: #ffcc00;
+      color: #282828;
+    }
+
+    .output-box {
+      background-color: #1e1e1e;
+      color: #cccccc;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      border: 1px solid #666666;
+      font-family: Consolas, monospace;
+    }
+
+    .output-box pre {
+      color: #66ff66;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .info-section {
+      background-color: #1e1e1e;
+      color: #cccccc;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+      text-align: center;
+    }
+
+    .footer {
+      text-align: center;
+      color: #aaaaaa;
+      font-size: 0.9rem;
+      margin-top: 30px;
+    }
+
+    .footer a {
+      color: #ffcc00;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .navbar {
+      background-color: #333333;
+    }
+
+    .navbar-brand {
+      color: #ffcc00;
+      font-weight: bold;
+    }
+
+    .navbar-nav .nav-link {
+      color: #66ff66;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #ffcc00;
+    }
+  </style>
+</head>
+<body>
+  
+<!-- Preloader -->
+<div id="preloader">
+  <div style="width: 80%; max-width: 400px; text-align: center;">
+    <div class="progress" style="height: 30px; background-color: #333333;">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <p class="loading-text" id="loading-text">Loading... 0%</p>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Regex Tester</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#how-to-use"><i class="fas fa-question-circle"></i> How to Use</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#about"><i class="fas fa-info-circle"></i> About</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container" id="home">
+  <!-- Header -->
+  <div class="header">
+    <h1>Regex Tester</h1>
+    <p>Test and debug regular expressions in real-time.</p>
+  </div>
+
+  <!-- Terminal -->
+  <div class="terminal">
+    <form id="regex-form">
+      <!-- Regex Input -->
+      <div class="mb-3">
+        <label for="regex-input" class="form-label"><i class="fas fa-code"></i> Enter Regex:</label>
+        <input type="text" id="regex-input" class="form-control" placeholder="e.g., ^\\d+$" />
+      </div>
+
+      <!-- Test String -->
+      <div class="mb-3">
+        <label for="test-string" class="form-label"><i class="fas fa-font"></i> Test String:</label>
+        <textarea id="test-string" class="form-control" rows="5" placeholder="Enter text to test the regex"></textarea>
+      </div>
+
+      <!-- Test Button -->
+      <button type="button" id="test-btn" class="btn btn-test w-100"><i class="fas fa-play"></i> Test Regex</button>
+    </form>
+
+    <!-- Regex Match Results -->
+    <div class="output-box" id="output-box">
+      <h5><i class="fas fa-chart-bar"></i> Matched Groups:</h5>
+      <pre id="output-result">Your regex results will appear here...</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>&copy; 2024 Regex Tester | Developed by <a href="https://www.tholumuzi.co.za" target="_blank">Tholumuzi Khuboni</a></p>
+</div>
+
+<script>
+
+  // Preloader logic
+  let progress = 0;
+  const progressBar = document.getElementById('progress-bar');
+  const loadingText = document.getElementById('loading-text');
+  const preloader = document.getElementById('preloader');
+  const container = document.querySelector('.container');
+
+  // Simulate loading
+  function simulateLoading() {
+    const interval = setInterval(() => {
+      if (progress < 100) {
+        progress += 1;
+        progressBar.style.width = `${progress}%`;
+        loadingText.textContent = `Loading... ${progress}%`;
+      } else {
+        clearInterval(interval);
+        preloader.style.display = 'none';
+        container.style.visibility = 'visible'; // Show content
+      }
+    }, 50); // Adjust speed by changing interval time
+  }
+
+  // Call the loading simulation
+  simulateLoading();
+  
+  // Test Regex
+  document.getElementById('test-btn').addEventListener('click', () => {
+    const regexInput = document.getElementById('regex-input').value;
+    const testString = document.getElementById('test-string').value;
+    const regex = new RegExp(regexInput, 'g');
+    
+    const matches = [...testString.matchAll(regex)];
+
+    let output = 'No matches found.\n';
+    if (matches.length > 0) {
+      output = 'Matched Groups:\n';
+      matches.forEach((match, index) => {
+        output += `Match ${index + 1}:\n`;
+        match.forEach((group, groupIndex) => {
+          output += `  Group ${groupIndex}: ${group}\n`;
+        });
+        output += '\n';
+      });
+    }
+
+    document.getElementById('output-result').innerText = output;
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
